@@ -72,6 +72,23 @@ role claim from the verified JWT — the client's own claims are never trusted.
   fails closed on any error/timeout. Set `PEER_MOCK=true` to always approve
   locally before a partner team is confirmed.
 
+## Contributing / branch workflow
+
+`main` is protected (proposal §10): no direct pushes, and every change lands
+via a PR that must pass the `CI / validate` check (`npx prisma validate` +
+a syntax check, see `.github/workflows/ci.yml`).
+
+```bash
+git checkout -b feature/short-description
+# ...make changes...
+git push -u origin feature/short-description
+gh pr create --fill
+```
+
+Since this is a solo capstone, PRs don't require a second approver — the
+protection rule only enforces "no direct commits to main" and "CI must pass"
+before merging.
+
 ## Deployment
 
 ```bash
