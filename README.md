@@ -12,6 +12,23 @@ same Azure VM — new port (4002), new MySQL database (`campus_store`), new PM2
 process (`campus-store-api`), new Nginx location (`/campus-store/`) — without
 touching the Lab's existing `/content` or `/api` routes.
 
+## Admin frontend (Product/Category CRUD)
+
+`frontend-admin/` is a small React + Vite app for exercising the RBAC-gated
+Category/Product CRUD and the AI description generation visually — everyone
+sees the catalog; STAFF/ADMIN see create forms; only ADMIN sees delete
+buttons, matching `src/middleware/auth.js` exactly.
+
+```bash
+cd frontend-admin
+npm install
+npm run dev   # http://localhost:5173, talks to the API on :4002
+```
+
+Uses the same `AUTH_MODE=mock` dev login as the API. A production build
+(`npm run build`) is base-pathed to `/campus-store/` (see `vite.config.js`)
+so it can eventually be served by the same Nginx block as the API.
+
 ## Stack
 
 Node.js 20 + Express, Prisma + MySQL, JWT + RBAC, Azure AD (MSAL) for login,
