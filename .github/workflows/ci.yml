@@ -16,6 +16,10 @@ jobs:
           node-version: 20
       - run: npm ci
       - name: Prisma schema validate
+        # `prisma validate` only checks the schema shape; it never connects,
+        # but it still needs DATABASE_URL present to resolve the env() call.
+        env:
+          DATABASE_URL: "mysql://user:pass@localhost:3306/campus_store"
         run: npx prisma validate
       - name: Syntax check
         run: find src -name "*.js" -exec node --check {} \;
