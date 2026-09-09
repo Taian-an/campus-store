@@ -1,0 +1,35 @@
+services:
+  # Local dev parity only — production uses the shared MySQL server on the
+  # Azure VM with its own "campus_store" database (proposal §10.2).
+  mysql:
+    image: mysql:8
+    container_name: campus-store-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: campus_store
+      MYSQL_USER: campus_store_user
+      MYSQL_PASSWORD: campus_store_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - campus_store_mysql_data:/var/lib/mysql
+
+  api:
+    build: .
+    container_name: campus-store-api
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "4002:4002"
+    environment:
+      - PORT=4002
+      - BASE_PATH=/campus-store
+      - AUTH_MODE=mock
+      - PEER_MOCK=true
+      - DATABASE_URL=mysql://campus_store_user:campus_store_pass@mysql:3306/campus_store
+      - JWT_SECRET=${JWT_SECRET:-dev_jwt_secret_change_me}
+
+volumes:
+  campus_store_mysql_data:
